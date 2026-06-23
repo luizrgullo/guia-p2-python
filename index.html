@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia Relâmpago da P2 — Python</title>
+<style>
+  :root{
+    --bg:#0f1226; --panel:#161a36; --panel2:#1d2347; --ink:#e9ecff; --muted:#9aa3d0;
+    --accent:#6c8cff; --accent2:#33d6a6; --warn:#ffb454; --pink:#ff7eb6;
+    --code-bg:#0b0e20; --kw:#ff7eb6; --str:#7ee787; --num:#ffd86b; --com:#7d86b8; --fn:#79c0ff;
+    --line:#2a315e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 600px at 80% -10%,#1b2150 0,var(--bg) 55%);color:var(--ink);line-height:1.55}
+  header{padding:34px 22px 18px;text-align:center}
+  header h1{margin:0;font-size:30px;letter-spacing:.3px}
+  header p{margin:8px auto 0;max-width:760px;color:var(--muted)}
+  .wrap{max-width:980px;margin:0 auto;padding:0 18px 80px}
+  nav.tabs{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
+    padding:14px 8px;margin:10px 0 8px;background:rgba(15,18,38,.86);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.tabs button{cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink);
+    padding:9px 14px;border-radius:999px;font-size:13.5px;font-weight:600;transition:.15s}
+  nav.tabs button:hover{border-color:var(--accent)}
+  nav.tabs button.active{background:linear-gradient(120deg,var(--accent),#8a6bff);border-color:transparent;color:#fff}
+  section{display:none;animation:fade .25s ease}
+  section.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+  h2.sec{font-size:23px;margin:18px 0 6px;display:flex;align-items:center;gap:10px}
+  h2.sec .dot{width:11px;height:11px;border-radius:50%;background:var(--accent2)}
+  .lead{color:var(--muted);margin:0 0 18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin:14px 0;
+    box-shadow:0 8px 30px rgba(0,0,0,.25)}
+  .card h3{margin:2px 0 6px;font-size:18px}
+  .card h3 .tag{font-size:11px;font-weight:700;color:#0b0e20;background:var(--accent2);
+    padding:2px 8px;border-radius:6px;margin-right:8px;vertical-align:middle}
+  .mantra{display:inline-block;margin:8px 0 2px;padding:7px 12px;border-radius:10px;
+    background:rgba(108,140,255,.13);border:1px solid var(--accent);color:#cdd6ff;font-weight:600;font-size:13.5px}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;
+    font-family:"SF Mono",Consolas,Menlo,monospace;font-size:13.3px;line-height:1.6;margin:12px 0}
+  code{font-family:"SF Mono",Consolas,Menlo,monospace}
+  .kw{color:var(--kw)} .str{color:var(--str)} .num{color:var(--num)} .com{color:var(--com)} .fn{color:var(--fn)} .bi{color:#ffd86b}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.6px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:#cdd6ff}
+  td code{color:#ffd86b}
+  .step{display:flex;gap:14px;align-items:flex-start;margin:12px 0}
+  .step .n{flex:0 0 36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:800;
+    background:linear-gradient(120deg,var(--accent),#8a6bff);color:#fff}
+  .pill{display:inline-block;background:var(--panel2);border:1px solid var(--line);padding:3px 9px;border-radius:8px;
+    font-size:12.5px;color:#cdd6ff;margin:2px 4px 2px 0}
+  .warn{border-left:4px solid var(--warn);background:rgba(255,180,84,.08)}
+  .ok{border-left:4px solid var(--accent2);background:rgba(51,214,166,.08)}
+  details{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:6px 14px;margin:10px 0}
+  details summary{cursor:pointer;font-weight:700;padding:8px 0;font-size:15px}
+  details[open] summary{color:var(--accent2)}
+  .out{background:#06210f;border:1px solid #1d5c3a;color:#b7f5cf;border-radius:10px;padding:10px 14px;
+    font-family:"SF Mono",Consolas,monospace;font-size:12.8px;white-space:pre;overflow:auto;margin:10px 0}
+  .saidaLabel{font-size:12px;color:var(--accent2);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+  .foot{text-align:center;color:var(--muted);font-size:12.5px;margin-top:30px}
+  b.h{color:#fff}
+  .enun{font-size:13.4px;color:#c8cef0;background:rgba(108,140,255,.07);border:1px dashed var(--line);
+    border-radius:10px;padding:10px 14px;margin:8px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>⚡ Guia Relâmpago da P2 — Python</h1>
+  <p>Tudo que você precisa pra resolver as questões com exatidão, no estilo que a banca aceita. Decore as <b class="h">10 receitas</b>, siga o <b class="h">método de 4 passos</b> e confira as resoluções comentadas. Funciona offline.</p>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" data-t="metodo">🎯 Método</button>
+  <button data-t="receitas">🍳 10 Receitas</button>
+  <button data-t="dicionario">📖 Dicionário</button>
+  <button data-t="resolucoes">✅ Resoluções</button>
+  <button data-t="pegadinhas">⚠️ Pegadinhas</button>
+</nav>
+
+<div class="wrap">
+
+<!-- ===================== MÉTODO ===================== -->
+<section id="metodo" class="active">
+  <h2 class="sec"><span class="dot"></span>Como atacar QUALQUER questão</h2>
+  <p class="lead">A P2 sempre pede a mesma coisa de jeitos diferentes: ler dados → organizar numa lista → calcular/filtrar → mostrar/gravar. Use este roteiro:</p>
+
+  <div class="card">
+    <div class="step"><div class="n">1</div><div><b class="h">Leia a saída esperada PRIMEIRO.</b> O formato do resultado te diz exatamente o que montar. Conte colunas, veja a ordem, veja o que é exibido na tela vs. gravado em arquivo.</div></div>
+    <div class="step"><div class="n">2</div><div><b class="h">Descubra o formato da entrada.</b> Quantos campos por linha? Separador é <code>,</code> ou <code>;</code>? Tem cabeçalho? Em dúvida, abra o <code>.txt</code> no Bloco de Notas (o enunciado costuma sugerir isso).</div></div>
+    <div class="step"><div class="n">3</div><div><b class="h">Escolha as receitas.</b> Quase toda questão é a combinação de 2–3 receitas: <span class="pill">Ler arquivo</span> + <span class="pill">Busca</span> + <span class="pill">Agrupar</span>, ou <span class="pill">Ler em blocos</span> + <span class="pill">Gravar</span>, etc.</div></div>
+    <div class="step"><div class="n">4</div><div><b class="h">Funções separadas + BP no fim.</b> Escreva cada função pedida (com o nome EXATO do enunciado) e, no final, o <b>BP (Bloco Principal)</b> que chama as funções para testar. Se o enunciado manda "use a função X", chame-a mesmo.</div></div>
+  </div>
+
+  <div class="card ok">
+    <h3>O esqueleto universal de uma questão de arquivo</h3>
+    <pre><code><span class="com"># 1) função que LÊ e organiza numa lista</span>
+<span class="kw">def</span> <span class="fn">leDados</span>(nomeArq):
+    arq = <span class="bi">open</span>(nomeArq, <span class="str">'r'</span>)
+    lista = []
+    <span class="kw">for</span> linha <span class="kw">in</span> arq:
+        campos = linha.strip().split(<span class="str">','</span>)
+        lista.append(campos)        <span class="com"># ou monta [campo0, int(campo1), ...]</span>
+    arq.close()
+    <span class="kw">return</span> lista
+
+<span class="com"># 2) função que EXIBE/processa</span>
+<span class="kw">def</span> <span class="fn">exibe</span>(lista):
+    <span class="kw">for</span> item <span class="kw">in</span> lista:
+        <span class="bi">print</span>(item)
+
+<span class="com"># 3) BP (bloco principal) – testa tudo</span>
+dados = <span class="fn">leDados</span>(<span class="str">'arquivo.txt'</span>)
+<span class="fn">exibe</span>(dados)</code></pre>
+    <span class="mantra">Mantra: abre → for linha → strip → split → usa → close</span>
+  </div>
+
+  <div class="card">
+    <h3>Os 5 tipos de questão que caem na P2</h3>
+    <table>
+      <tr><th>Quando o enunciado diz…</th><th>É questão de…</th><th>Receitas</th></tr>
+      <tr><td>"processe o arquivo X.txt"</td><td>Arquivo</td><td>1, 3/4 ou 5, 8, 10</td></tr>
+      <tr><td>"cada elemento é uma sublista com…"</td><td>Listas aninhadas</td><td>3 (busca) + 4 (agrupar)</td></tr>
+      <tr><td>"decodifique / gere a senha / monte a string"</td><td>Strings</td><td>7 (fatiar/percorrer)</td></tr>
+      <tr><td>"calcule pela fórmula / por intervalo"</td><td>Fórmulas/funções</td><td>9 ou laço + acumular</td></tr>
+      <tr><td>"função recursiva"</td><td>Recursão</td><td>9 (caso base + passo)</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===================== RECEITAS ===================== -->
+<section id="receitas">
+  <h2 class="sec"><span class="dot"></span>As 10 Receitas (decore estas!)</h2>
+  <p class="lead">Estes são os "moldes" reaproveitáveis. Se você souber estes 10 de cor, monta qualquer questão da P2 encaixando peças.</p>
+
+  <div class="card">
+    <h3><span class="tag">1</span>Ler arquivo linha a linha <em>(o coração da P2)</em></h3>
+    <pre><code>arq = <span class="bi">open</span>(<span class="str">'dados.txt'</span>, <span class="str">'r'</span>)
+<span class="kw">for</span> linha <span class="kw">in</span> arq:
+    linha = linha.strip()          <span class="com"># tira o \n do final</span>
+    campos = linha.split(<span class="str">','</span>)      <span class="com"># quebra nos campos (',' ou ';')</span>
+    nome  = campos[<span class="num">0</span>]
+    horas = <span class="bi">int</span>(campos[<span class="num">2</span>])         <span class="com"># SEMPRE converta números!</span>
+    valor = <span class="bi">float</span>(campos[<span class="num">3</span>])
+arq.close()</code></pre>
+    <span class="mantra">abre → for linha → strip → split → converte → close</span>
+  </div>
+
+  <div class="card">
+    <h3><span class="tag">2</span>Gravar em arquivo</h3>
+    <pre><code>arqSaida = <span class="bi">open</span>(<span class="str">'saida.txt'</span>, <span class="str">'w'</span>)   <span class="com"># 'w' apaga e escreve | 'a' acrescenta</span>
+arqSaida.write(nome + <span class="str">'\n'</span>)         <span class="com"># write NÃO pula linha sozinho → ponha \n</span>
+arqSaida.close()</code></pre>
+    <div class="enun">Para gravar número: <code>arq.write(<span class="str">'%s %.2f\n'</span> % (nome, media))</code></div>
+  </div>
+
+  <div class="card">
+    <h3><span class="tag">3</span>Função de busca → retorna índice ou None</h3>
+    <pre><code><span class="kw">def</span> <span class="fn">busca</span>(chave, lista):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(<span class="bi">len</span>(lista)):
+        <span class="kw">if</span> lista[i][<span class="num">0</span>] == chave:
+            <span class="kw">return</span> i
+    <span class="kw">return</span> <span class="kw">None</span></code></pre>
+    <span class="mantra">Use sempre que precisar "achar/atualizar" algo numa lista de listinhas.</span>
+  </div>
+
+  <div class="card">
+    <h3><span class="tag">4</span>Agrupar / acumular numa lista de listinhas (com busca)</h3>
+    <pre><code>ind = <span class="fn">busca</span>(chave, resultado)
+<span class="kw">if</span> ind <span class="kw">is</span> <span class="kw">None</span>:
+    resultado.append([chave, valor])              <span class="com"># 1ª vez: cria</span>
+<span class="kw">else</span>:
+    resultado[ind][<span class="num">1</span>] = resultado[ind][<span class="num">1</span>] + valor  <span class="com"># já existe: soma</span></code></pre>
+    <div class="enun">É assim que se monta <code>[cidade, total_horas, total_valor]</code> ou <code>[sobrenome, [nomes...]]</code>.</div>
+  </div>
+
+  <div class="card">
+    <h3><span class="tag">5</span>Acumular por índice fixo (SEM busca, eficiente)</h3>
+    <pre><code>contador = [<span class="num">0</span>] * N             <span class="com"># N posições zeradas (ex.: 14 turmas)</span>
+contador[turma - <span class="num">1</span>] += <span class="num">1</span>      <span class="com"># posição = número - 1</span></code></pre>
+    <div class="enun warn">Use quando o enunciado disser <b>"não use busca / seja eficiente / se fossem 100 turmas a mudança seria mínima"</b>. A chave precisa ser um número de 1 a N.</div>
+  </div>
+
+  <div class="card">
+    <h3><span class="tag">6</span>Ler arquivo "em blocos" (cabeçalho + N linhas)</h3>
+    <pre><code>linha = arq.readline()
+<span class="kw">while</span> linha != <span class="str">''</span>:                       <span class="com"># '' = fim do arquivo</span>
+    campos = linha.strip().split(<span class="str">','</span>)
+    n = <span class="bi">int</span>(campos[<span class="num">1</span>])                   <span class="com"># quantos itens vêm a seguir</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(n):
+        item = arq.readline().strip().split(<span class="str">','</span>)
+        ...                                <span class="com"># processa cada item</span>
+    linha = arq.readline()                 <span class="com"># lê o próximo cabeçalho</span></code></pre>
+    <div class="enun">Para arquivos tipo <code>predio,qtdSalas / sala,lugares / sala,lugares ...</code> (questão das salas).</div>
+  </div>
+
+  <div class="card">
+    <h3><span class="tag">7</span>Strings: fatiar e percorrer</h3>
+    <div class="grid">
+      <pre><code>s[<span class="num">0</span>]      <span class="com"># 1º caractere</span>
+s[-<span class="num">1</span>]     <span class="com"># último</span>
+s[<span class="num">3</span>:<span class="num">5</span>]    <span class="com"># do 3 ao 4 (o 5 NÃO entra)</span>
+s[::-<span class="num">1</span>]   <span class="com"># invertido</span>
+<span class="bi">len</span>(s)    <span class="com"># tamanho</span></code></pre>
+      <pre><code><span class="kw">for</span> c <span class="kw">in</span> s:           <span class="com"># caractere a caractere</span>
+    <span class="kw">if</span> c <span class="kw">in</span> <span class="str">'aeiou'</span>:   <span class="com"># é vogal?</span>
+        ...
+nova = nova + c        <span class="com"># constrói string nova</span></code></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="tag">8</span>Ordenar</h3>
+    <pre><code>lista.sort()    <span class="com"># ordena no lugar; em lista de listinhas, ordena pela 1ª coluna</span></code></pre>
+    <div class="enun">"exibir ORDENADO pelo nome" → basta um <code>lista.sort()</code> antes de exibir (se o nome for o 1º elemento de cada listinha).</div>
+  </div>
+
+  <div class="card">
+    <h3><span class="tag">9</span>Recursão (caso base + passo recursivo)</h3>
+    <pre><code><span class="kw">def</span> <span class="fn">f</span>(n):
+    <span class="kw">if</span> &lt;caso base&gt;:            <span class="com"># quando PARAR (ex.: n &lt; 10)</span>
+        <span class="kw">return</span> &lt;valor simples&gt;
+    <span class="kw">return</span> ... <span class="fn">f</span>(n menor) ...   <span class="com"># passo: chama com n caminhando pro caso base</span></code></pre>
+    <span class="mantra">Regra de ouro: SEMPRE um caso base + a chamada recursiva precisa se aproximar dele.</span>
+    <div class="grid">
+      <pre><code><span class="com"># soma dos algarismos: 323 → 8</span>
+<span class="kw">def</span> <span class="fn">somaAlg</span>(n):
+    <span class="kw">if</span> n &lt; <span class="num">10</span>:
+        <span class="kw">return</span> n
+    <span class="kw">return</span> n % <span class="num">10</span> + <span class="fn">somaAlg</span>(n // <span class="num">10</span>)</code></pre>
+      <pre><code><span class="com"># exibe na vertical: 875 → 8/7/5</span>
+<span class="kw">def</span> <span class="fn">exibeVert</span>(n):
+    <span class="kw">if</span> n &lt; <span class="num">10</span>:
+        <span class="bi">print</span>(n)
+        <span class="kw">return</span>
+    <span class="fn">exibeVert</span>(n // <span class="num">10</span>)
+    <span class="bi">print</span>(n % <span class="num">10</span>)</code></pre>
+    </div>
+    <div class="enun"><code>n % 10</code> = último algarismo &nbsp;|&nbsp; <code>n // 10</code> = número sem o último algarismo. Esse par é a base de quase toda recursão com número.</div>
+  </div>
+
+  <div class="card">
+    <h3><span class="tag">10</span>print formatado (alinhar colunas)</h3>
+    <pre><code><span class="bi">print</span>(<span class="str">"%-20s %.2f"</span> % (nome, valor))   <span class="com"># -20s: texto à esquerda em 20 espaços; .2f: 2 casas</span>
+<span class="bi">print</span>(<span class="str">"%3d"</span> % n)                        <span class="com"># número em 3 espaços (alinha à direita)</span></code></pre>
+    <table>
+      <tr><th>Código</th><th>Significa</th></tr>
+      <tr><td><code>%d</code></td><td>inteiro</td></tr>
+      <tr><td><code>%.2f</code></td><td>real com 2 casas decimais</td></tr>
+      <tr><td><code>%s</code></td><td>string</td></tr>
+      <tr><td><code>%-20s</code></td><td>string à esquerda ocupando 20 espaços (alinha colunas)</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===================== DICIONÁRIO ===================== -->
+<section id="dicionario">
+  <h2 class="sec"><span class="dot"></span>Mini-dicionário de comandos</h2>
+  <p class="lead">Os comandos que aparecem em quase toda questão. Se travar, é quase sempre um destes.</p>
+
+  <div class="card">
+    <h3>Arquivos</h3>
+    <table>
+      <tr><th>Comando</th><th>O que faz</th></tr>
+      <tr><td><code>open('a.txt','r')</code></td><td>abre para <b>ler</b></td></tr>
+      <tr><td><code>open('a.txt','w')</code></td><td>abre para <b>escrever</b> (apaga o que tinha)</td></tr>
+      <tr><td><code>open('a.txt','a')</code></td><td>abre para <b>acrescentar</b> no fim</td></tr>
+      <tr><td><code>for linha in arq:</code></td><td>percorre linha a linha (jeito mais simples)</td></tr>
+      <tr><td><code>arq.readline()</code></td><td>lê <b>uma</b> linha; retorna <code>''</code> no fim do arquivo</td></tr>
+      <tr><td><code>arq.write(texto)</code></td><td>grava texto (lembre do <code>'\n'</code>)</td></tr>
+      <tr><td><code>arq.close()</code></td><td>fecha o arquivo (não esqueça!)</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Strings & conversões</h3>
+    <table>
+      <tr><th>Comando</th><th>O que faz</th><th>Exemplo</th></tr>
+      <tr><td><code>.strip()</code></td><td>tira espaços e <code>\n</code> das pontas</td><td><code>' oi\n'.strip()→'oi'</code></td></tr>
+      <tr><td><code>.split(',')</code></td><td>quebra string numa lista</td><td><code>'a,b'.split(',')→['a','b']</code></td></tr>
+      <tr><td><code>int(x)</code> / <code>float(x)</code></td><td>texto → número</td><td><code>int('12')→12</code></td></tr>
+      <tr><td><code>str(x)</code></td><td>número → texto</td><td><code>str(12)→'12'</code></td></tr>
+      <tr><td><code>s[::-1]</code></td><td>inverte a string</td><td><code>'04'[::-1]→'40'</code></td></tr>
+      <tr><td><code>.upper()/.lower()</code></td><td>maiúsculas/minúsculas</td><td><code>'a'.upper()→'A'</code></td></tr>
+      <tr><td><code>c in 'aeiou'</code></td><td>testa se está contido</td><td><code>'e' in 'aeiou'→True</code></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Listas</h3>
+    <table>
+      <tr><th>Comando</th><th>O que faz</th></tr>
+      <tr><td><code>lista = []</code></td><td>cria lista vazia</td></tr>
+      <tr><td><code>lista.append(x)</code></td><td>adiciona x no fim</td></tr>
+      <tr><td><code>len(lista)</code></td><td>quantos elementos</td></tr>
+      <tr><td><code>lista[i][j]</code></td><td>acessa listinha dentro de lista</td></tr>
+      <tr><td><code>[0]*n</code></td><td>lista de n zeros</td></tr>
+      <tr><td><code>lista.sort()</code></td><td>ordena no lugar</td></tr>
+      <tr><td><code>for x in lista:</code></td><td>percorre os elementos</td></tr>
+      <tr><td><code>for i in range(len(lista)):</code></td><td>percorre pelos índices (quando precisa do i)</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Aritmética útil</h3>
+    <table>
+      <tr><th>Operador</th><th>O que faz</th><th>Exemplo</th></tr>
+      <tr><td><code>//</code></td><td>divisão inteira</td><td><code>17//5 → 3</code></td></tr>
+      <tr><td><code>%</code></td><td>resto da divisão</td><td><code>17%5 → 2</code></td></tr>
+      <tr><td><code>n % 10</code></td><td>último algarismo de n</td><td><code>875%10 → 5</code></td></tr>
+      <tr><td><code>n // 10</code></td><td>n sem o último algarismo</td><td><code>875//10 → 87</code></td></tr>
+      <tr><td><code>n % 2 == 0</code></td><td>n é par?</td><td><code>4%2==0 → True</code></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===================== RESOLUÇÕES ===================== -->
+<section id="resolucoes">
+  <h2 class="sec"><span class="dot"></span>Resoluções comentadas (no estilo da banca)</h2>
+  <p class="lead">Todas testadas e batendo com o gabarito. Clique para abrir cada uma. Estude vendo QUAIS receitas foram encaixadas.</p>
+
+  <h3 style="color:var(--accent2);margin-top:18px">📝 Simulado da P2</h3>
+
+  <details open>
+    <summary>Simulado Q1 — decodifica / agrupaCodifDecodif / exibePalavras &nbsp;·&nbsp; <span style="color:var(--muted);font-weight:400">Receitas 3, 4, 7</span></summary>
+    <div class="enun">Decodificar: consoantes maiúsculas ficam; vogais foram trocadas pela consoante minúscula seguinte (a→b, e→f, i→j, o→p, u→v), então na volta <code>b→A, f→E, j→I, p→O, v→U</code>. Agrupar strings de 3 a 10 caracteres por tamanho. Exibir.</div>
+    <pre><code><span class="kw">def</span> <span class="fn">decodifica</span>(s):
+    mapa = {<span class="str">'b'</span>:<span class="str">'A'</span>, <span class="str">'f'</span>:<span class="str">'E'</span>, <span class="str">'j'</span>:<span class="str">'I'</span>, <span class="str">'p'</span>:<span class="str">'O'</span>, <span class="str">'v'</span>:<span class="str">'U'</span>}
+    resultado = <span class="str">''</span>
+    <span class="kw">for</span> c <span class="kw">in</span> s:
+        <span class="kw">if</span> c <span class="kw">in</span> mapa:
+            resultado = resultado + mapa[c]
+        <span class="kw">else</span>:
+            resultado = resultado + c       <span class="com"># consoante ou outro: não muda</span>
+    <span class="kw">return</span> resultado
+
+<span class="kw">def</span> <span class="fn">agrupaCodifDecodif</span>(lista):
+    grupos = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(<span class="num">8</span>):                  <span class="com"># 3 a 10 letras = 8 listinhas</span>
+        grupos.append([])
+    <span class="kw">for</span> palavra <span class="kw">in</span> lista:
+        tam = <span class="bi">len</span>(palavra)
+        <span class="kw">if</span> tam &gt;= <span class="num">3</span> <span class="kw">and</span> tam &lt;= <span class="num">10</span>:
+            nova = palavra + <span class="str">':'</span> + <span class="fn">decodifica</span>(palavra)
+            grupos[tam - <span class="num">3</span>].append(nova)   <span class="com"># tam 3 → índice 0</span>
+    <span class="kw">return</span> grupos
+
+<span class="kw">def</span> <span class="fn">exibePalavras</span>(grupos):
+    <span class="bi">print</span>(<span class="str">'Palavras agrupadas por número de letras:'</span>)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(<span class="bi">len</span>(grupos)):
+        <span class="kw">if</span> grupos[i] != []:
+            <span class="bi">print</span>(<span class="str">'%d letras:'</span> % (i + <span class="num">3</span>))
+            <span class="kw">for</span> s <span class="kw">in</span> grupos[i]:
+                <span class="bi">print</span>(<span class="str">' '</span> + s)
+
+<span class="com"># BP</span>
+lista_codificada = [<span class="str">'BpTp'</span>,<span class="str">'RÃ'</span>,<span class="str">'GbTp'</span>,<span class="str">'GNv'</span>,<span class="str">'LpBp'</span>,<span class="str">'PbTp'</span>,<span class="str">'TjGRf'</span>,<span class="str">'CpBRb'</span>,
+<span class="str">'RbPpSb'</span>,<span class="str">'CbNGvRv'</span>,<span class="str">'bRRbjb'</span>,<span class="str">'JbCbRÉ'</span>,<span class="str">'GpLFjNHp'</span>,<span class="str">'TbTv BpLb'</span>,<span class="str">'PbVÃp bZvL'</span>,
+<span class="str">'PfjXf PbLHbÇp'</span>,<span class="str">'LpBp GvbRÁ'</span>,<span class="str">'ÁGvjb CbRfCb'</span>,<span class="str">'CfRVp VfRMfLHp'</span>,<span class="str">'CbVbLp MbRjNHp'</span>]
+res = <span class="fn">agrupaCodifDecodif</span>(lista_codificada)
+<span class="fn">exibePalavras</span>(res)</code></pre>
+    <div class="saidaLabel">Saída (testada ✓)</div>
+    <div class="out">Palavras agrupadas por número de letras:
+3 letras:
+ GNv:GNU
+4 letras:
+ BpTp:BOTO
+ GbTp:GATO
+ LpBp:LOBO
+ PbTp:PATO
+5 letras:
+ TjGRf:TIGRE
+ CpBRb:COBRA
+6 letras:
+ RbPpSb:RAPOSA
+ bRRbjb:ARRAIA
+ JbCbRÉ:JACARÉ
+7 letras:
+ CbNGvRv:CANGURU
+8 letras:
+ GpLFjNHp:GOLFINHO
+9 letras:
+ TbTv BpLb:TATU BOLA
+10 letras:
+ PbVÃp bZvL:PAVÃO AZUL
+ LpBp GvbRÁ:LOBO GUARÁ</div>
+  </details>
+
+  <details>
+    <summary>Simulado Q2 — valor médio por hora por cidade &nbsp;·&nbsp; <span style="color:var(--muted);font-weight:400">Receitas 1, 3, 4, 8, 10</span></summary>
+    <div class="enun">Cada linha: <code>cidade,tipo,horas,valor</code>. Somar horas e valores por cidade (a busca é função separada!), depois exibir cidade e <code>valor/horas</code>, ordenado pelo nome.</div>
+    <pre><code><span class="kw">def</span> <span class="fn">buscaCidade</span>(cidade, lista):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(<span class="bi">len</span>(lista)):
+        <span class="kw">if</span> lista[i][<span class="num">0</span>] == cidade:
+            <span class="kw">return</span> i
+    <span class="kw">return</span> <span class="kw">None</span>
+
+<span class="kw">def</span> <span class="fn">calcular_valores_por_cidade</span>(nomeArq):
+    arq = <span class="bi">open</span>(nomeArq, <span class="str">'r'</span>)
+    resultado = []
+    <span class="kw">for</span> linha <span class="kw">in</span> arq:
+        campos = linha.strip().split(<span class="str">','</span>)
+        cidade = campos[<span class="num">0</span>]
+        horas  = <span class="bi">int</span>(campos[<span class="num">2</span>])
+        valor  = <span class="bi">float</span>(campos[<span class="num">3</span>])
+        ind = <span class="fn">buscaCidade</span>(cidade, resultado)
+        <span class="kw">if</span> ind <span class="kw">is</span> <span class="kw">None</span>:
+            resultado.append([cidade, horas, valor])      <span class="com"># [cidade,totHoras,totValor]</span>
+        <span class="kw">else</span>:
+            resultado[ind][<span class="num">1</span>] = resultado[ind][<span class="num">1</span>] + horas
+            resultado[ind][<span class="num">2</span>] = resultado[ind][<span class="num">2</span>] + valor
+    arq.close()
+    <span class="kw">return</span> resultado
+
+<span class="kw">def</span> <span class="fn">exibir_resultados</span>(lista):
+    lista.sort()                              <span class="com"># ordena pelo nome da cidade</span>
+    <span class="kw">for</span> item <span class="kw">in</span> lista:
+        media = item[<span class="num">2</span>] / item[<span class="num">1</span>]
+        <span class="bi">print</span>(<span class="str">'%-20s %.2f'</span> % (item[<span class="num">0</span>], media))
+
+<span class="com"># BP</span>
+dados = <span class="fn">calcular_valores_por_cidade</span>(<span class="str">'serviços_prestados.txt'</span>)
+<span class="fn">exibir_resultados</span>(dados)</code></pre>
+    <div class="saidaLabel">Saída (testada ✓)</div>
+    <div class="out">Belo Horizonte       111.05
+Curitiba             103.85
+Porto Alegre         102.73
+Rio de Janeiro       131.58
+São Paulo            91.04</div>
+  </details>
+
+  <details>
+    <summary>Simulado Q3 — geraSenha &nbsp;·&nbsp; <span style="color:var(--muted);font-weight:400">Receita 7</span></summary>
+    <div class="enun">Senha = 1º caractere do nome + último caractere + miolo (por faixa de idade) + mês de aniversário invertido. Ex.: "Luiz Felipe", 25, "19/04" → <code>L</code>+<code>e</code>+<code>$%</code>+<code>40</code> = <code>Le$%40</code>.</div>
+    <pre><code><span class="kw">def</span> <span class="fn">geraSenha</span>(nome, idade, dataAniv):
+    <span class="kw">if</span> idade &lt; <span class="num">18</span>:
+        miolo = <span class="str">'#*'</span>
+    <span class="kw">elif</span> idade &lt; <span class="num">40</span>:
+        miolo = <span class="str">'$%'</span>
+    <span class="kw">else</span>:
+        miolo = <span class="str">'&@'</span>
+    mes = dataAniv[<span class="num">3</span>:<span class="num">5</span>]          <span class="com"># 'dd/mm' → pega 'mm'</span>
+    mesInvertido = mes[::-<span class="num">1</span>]    <span class="com"># '04' → '40'</span>
+    <span class="kw">return</span> nome[<span class="num">0</span>] + nome[-<span class="num">1</span>] + miolo + mesInvertido
+
+<span class="com"># BP – pergunta ao usuário</span>
+nome = <span class="bi">input</span>(<span class="str">'Nome: '</span>)
+idade = <span class="bi">int</span>(<span class="bi">input</span>(<span class="str">'Idade: '</span>))
+data = <span class="bi">input</span>(<span class="str">'Aniversário (dd/mm): '</span>)
+<span class="bi">print</span>(<span class="str">'Senha de acesso:'</span>, <span class="fn">geraSenha</span>(nome, idade, data))</code></pre>
+    <div class="saidaLabel">Testes (✓)</div>
+    <div class="out">geraSenha('Luiz Felipe', 25, '19/04') → Le$%40   (bate com o exemplo)
+geraSenha('Ana', 15, '07/12')        → Aa#*21
+geraSenha('Roberto', 52, '30/08')    → Ro&@80</div>
+  </details>
+
+  <h3 style="color:var(--accent2);margin-top:24px">📚 Revisão (provas anteriores)</h3>
+
+  <details>
+    <summary>Revisão Q1 — criaListaFamilias / buscaSobrenome &nbsp;·&nbsp; <span style="color:var(--muted);font-weight:400">Receitas 3, 4</span></summary>
+    <div class="enun">Recebe lista de <code>[sobrenome, nome]</code>. Retorna <code>[sobrenome, [todos os nomes desse sobrenome]]</code>. Obrigatório usar a função <code>buscaSobrenome</code> (retorna índice ou None).</div>
+    <pre><code><span class="kw">def</span> <span class="fn">buscaSobrenome</span>(sobrenome, lista):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(<span class="bi">len</span>(lista)):
+        <span class="kw">if</span> lista[i][<span class="num">0</span>] == sobrenome:
+            <span class="kw">return</span> i
+    <span class="kw">return</span> <span class="kw">None</span>
+
+<span class="kw">def</span> <span class="fn">criaListaFamilias</span>(lista):
+    familias = []
+    <span class="kw">for</span> par <span class="kw">in</span> lista:
+        sobrenome = par[<span class="num">0</span>]
+        nome = par[<span class="num">1</span>]
+        ind = <span class="fn">buscaSobrenome</span>(sobrenome, familias)
+        <span class="kw">if</span> ind <span class="kw">is</span> <span class="kw">None</span>:
+            familias.append([sobrenome, [nome]])   <span class="com"># cria com lista de 1 nome</span>
+        <span class="kw">else</span>:
+            familias[ind][<span class="num">1</span>].append(nome)        <span class="com"># adiciona na sublista de nomes</span>
+    <span class="kw">return</span> familias
+
+<span class="com"># BP</span>
+listaNomes = [[<span class="str">'Oliveira'</span>,<span class="str">'Pato Donald'</span>],[<span class="str">'Mouse'</span>,<span class="str">'Mickey'</span>], <span class="com"># ... (copie do LISTADENOMES.PY)</span>]
+fam = <span class="fn">criaListaFamilias</span>(listaNomes)
+<span class="kw">for</span> f <span class="kw">in</span> fam:
+    <span class="bi">print</span>(f[<span class="num">0</span>])
+    <span class="bi">print</span>(f[<span class="num">1</span>])</code></pre>
+    <div class="saidaLabel">Saída (testada ✓)</div>
+    <div class="out">Oliveira
+['Pato Donald', 'Margarida', 'Luisinho', 'Huguinho', 'Zezinho']
+Mouse
+['Mickey', 'Minnie']
+Emof
+['Clarabela', 'Horacio']
+Onca
+['Joao Bafo de', 'Joana']
+Smart
+['Ludovico', 'Peninha']</div>
+  </details>
+
+  <details>
+    <summary>Revisão Q2 — geraSituacaoFinal &nbsp;·&nbsp; <span style="color:var(--muted);font-weight:400">Receitas 3, 4</span></summary>
+    <div class="enun">Lista de <code>[disciplina, [[nome, média], ...]]</code>. Retornar <code>[nome, [disciplinas aprovadas (média ≥ 5)]]</code>. Percorrer a lista recebida UMA vez só; o aluno aparece mesmo com 0 aprovações.</div>
+    <pre><code><span class="kw">def</span> <span class="fn">buscaAluno</span>(nome, lista):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(<span class="bi">len</span>(lista)):
+        <span class="kw">if</span> lista[i][<span class="num">0</span>] == nome:
+            <span class="kw">return</span> i
+    <span class="kw">return</span> <span class="kw">None</span>
+
+<span class="kw">def</span> <span class="fn">geraSituacaoFinal</span>(disciplinas):
+    resultado = []
+    <span class="kw">for</span> disc <span class="kw">in</span> disciplinas:          <span class="com"># percorre a lista recebida 1 vez</span>
+        codigo = disc[<span class="num">0</span>]
+        <span class="kw">for</span> al <span class="kw">in</span> disc[<span class="num">1</span>]:
+            nome = al[<span class="num">0</span>]
+            media = al[<span class="num">1</span>]
+            ind = <span class="fn">buscaAluno</span>(nome, resultado)
+            <span class="kw">if</span> ind <span class="kw">is</span> <span class="kw">None</span>:
+                <span class="kw">if</span> media &gt;= <span class="num">5.0</span>:
+                    resultado.append([nome, [codigo]])
+                <span class="kw">else</span>:
+                    resultado.append([nome, []])    <span class="com"># entra mesmo reprovado</span>
+            <span class="kw">else</span>:
+                <span class="kw">if</span> media &gt;= <span class="num">5.0</span>:
+                    resultado[ind][<span class="num">1</span>].append(codigo)
+    <span class="kw">return</span> resultado
+
+<span class="com"># BP</span>
+lista = [[<span class="str">'INF1025'</span>,[[<span class="str">'JOÃO'</span>,<span class="num">9.0</span>],[<span class="str">'MARIA'</span>,<span class="num">8.0</span>],[<span class="str">'JOSÉ'</span>,<span class="num">4.9</span>]]],
+         [<span class="str">'INF1026'</span>,[[<span class="str">'JOÃO'</span>,<span class="num">7.0</span>],[<span class="str">'MARIA'</span>,<span class="num">4.1</span>]]],
+         [<span class="str">'INF1007'</span>,[[<span class="str">'JOSÉ'</span>,<span class="num">4.3</span>]]]]
+sit = <span class="fn">geraSituacaoFinal</span>(lista)
+<span class="kw">for</span> al <span class="kw">in</span> sit:
+    <span class="bi">print</span>(<span class="str">'%s foi aprovado(a) em %d disciplina(s):'</span> % (al[<span class="num">0</span>], <span class="bi">len</span>(al[<span class="num">1</span>])))
+    <span class="kw">for</span> d <span class="kw">in</span> al[<span class="num">1</span>]:
+        <span class="bi">print</span>(<span class="str">'   '</span> + d)</code></pre>
+    <div class="saidaLabel">Saída (testada ✓)</div>
+    <div class="out">JOÃO foi aprovado(a) em 2 disciplina(s):
+   INF1025
+   INF1026
+MARIA foi aprovado(a) em 1 disciplina(s):
+   INF1025
+JOSÉ foi aprovado(a) em 0 disciplina(s):</div>
+  </details>
+
+  <details>
+    <summary>Revisão Q3 — aprovados por turma (SEM busca, 1 leitura) &nbsp;·&nbsp; <span style="color:var(--muted);font-weight:400">Receitas 1, 5</span></summary>
+    <div class="enun">Arquivo <code>nome;turma;APV/REP</code>. Exibir, por turma (1 a 14), a quantidade de aprovados. Não usar busca; ler só uma vez; ser eficiente (escalar para 100 turmas trocando 1 número).</div>
+    <pre><code>QTD_TURMAS = <span class="num">14</span>
+
+<span class="kw">def</span> <span class="fn">contaAprovados</span>(nomeArq):
+    aprovados = [<span class="num">0</span>] * QTD_TURMAS          <span class="com"># Receita 5: índice fixo, sem busca</span>
+    arq = <span class="bi">open</span>(nomeArq, <span class="str">'r'</span>)
+    <span class="kw">for</span> linha <span class="kw">in</span> arq:
+        campos = linha.strip().split(<span class="str">';'</span>)   <span class="com"># separador é ';'</span>
+        turma = <span class="bi">int</span>(campos[<span class="num">1</span>])
+        situacao = campos[<span class="num">2</span>]
+        <span class="kw">if</span> situacao == <span class="str">'APV'</span>:
+            aprovados[turma - <span class="num">1</span>] += <span class="num">1</span>      <span class="com"># turma 1 → posição 0</span>
+    arq.close()
+    <span class="kw">return</span> aprovados
+
+<span class="com"># BP</span>
+aprov = <span class="fn">contaAprovados</span>(<span class="str">'alunoseresultadoscurso.txt'</span>)
+<span class="bi">print</span>(<span class="str">'Turma  Qtd. de aprovados'</span>)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(QTD_TURMAS):
+    <span class="bi">print</span>(<span class="str">'%3d %10d'</span> % (i + <span class="num">1</span>, aprov[i]))</code></pre>
+    <div class="saidaLabel">Saída (testada ✓ — bate com o gabarito)</div>
+    <div class="out">Turma  Qtd. de aprovados
+  1          1
+  2          0
+  3          3
+  4          3
+  5          3
+  6          2
+  7          1
+  8          0
+  9          1
+ 10          3
+ 11          1
+ 12          1
+ 13          1
+ 14          2</div>
+  </details>
+
+  <details>
+    <summary>Revisão Q4 — alocação de salas (o "monstro" da P2) &nbsp;·&nbsp; <span style="color:var(--muted);font-weight:400">Receitas 6, 2, 10</span></summary>
+    <div class="enun">SALAS.TXT vem em blocos: <code>predio,qtdSalas</code> e depois as salas <code>nomeSala,lugares</code>. ALUNOS.TXT: <code>nome,codTurma</code>. Para cada aluno calcula o índice da sala (<code>(len(nome)+parteNumérica) % qtdSalas</code>), aloca se houver vaga (descontando 1), senão grava em SEMSALA.TXT. Não ler nenhum arquivo de uma vez só.</div>
+    <pre><code><span class="kw">def</span> <span class="fn">leArqSalas</span>(nomeArq):
+    salas = []
+    arq = <span class="bi">open</span>(nomeArq, <span class="str">'r'</span>)
+    linha = arq.readline()                       <span class="com"># cabeçalho do prédio</span>
+    <span class="kw">while</span> linha != <span class="str">''</span>:                         <span class="com"># Receita 6: ler em blocos</span>
+        campos = linha.strip().split(<span class="str">','</span>)
+        qtd = <span class="bi">int</span>(campos[<span class="num">1</span>])                   <span class="com"># nº de salas deste prédio</span>
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="bi">range</span>(qtd):
+            dados = arq.readline().strip().split(<span class="str">','</span>)
+            salas.append([dados[<span class="num">0</span>], <span class="bi">int</span>(dados[<span class="num">1</span>])])  <span class="com"># [nomeSala, lugares]</span>
+        linha = arq.readline()                   <span class="com"># próximo prédio</span>
+    arq.close()
+    <span class="kw">return</span> salas
+
+<span class="kw">def</span> <span class="fn">determinaIndiceSalaDoAluno</span>(qtdSalas, nome, codTurma):
+    parteNum = <span class="bi">int</span>(codTurma[:-<span class="num">1</span>])      <span class="com"># '98B' → 98 (tira a última letra)</span>
+    valorBase = <span class="bi">len</span>(nome) + parteNum
+    <span class="kw">return</span> valorBase % qtdSalas
+
+<span class="kw">def</span> <span class="fn">processaArqAlunos</span>(salas):
+    arqAlunos = <span class="bi">open</span>(<span class="str">'alunos.txt'</span>, <span class="str">'r'</span>)
+    arqSem = <span class="bi">open</span>(<span class="str">'SEMSALA.txt'</span>, <span class="str">'w'</span>)
+    qtdSalas = <span class="bi">len</span>(salas)
+    <span class="bi">print</span>(<span class="str">'%-20s %s'</span> % (<span class="str">'Nome'</span>, <span class="str">'Sala'</span>))
+    <span class="kw">for</span> linha <span class="kw">in</span> arqAlunos:
+        campos = linha.strip().split(<span class="str">','</span>)
+        nome = campos[<span class="num">0</span>]
+        cod = campos[<span class="num">1</span>]
+        ind = <span class="fn">determinaIndiceSalaDoAluno</span>(qtdSalas, nome, cod)
+        <span class="kw">if</span> salas[ind][<span class="num">1</span>] &gt; <span class="num">0</span>:                 <span class="com"># tem vaga?</span>
+            <span class="bi">print</span>(<span class="str">'%-20s %s'</span> % (nome, salas[ind][<span class="num">0</span>]))
+            salas[ind][<span class="num">1</span>] = salas[ind][<span class="num">1</span>] - <span class="num">1</span>  <span class="com"># desconta a vaga</span>
+        <span class="kw">else</span>:
+            arqSem.write(nome + <span class="str">'\n'</span>)
+    arqAlunos.close()
+    arqSem.close()
+
+<span class="com"># BP</span>
+salas = <span class="fn">leArqSalas</span>(<span class="str">'salas.txt'</span>)
+<span class="fn">processaArqAlunos</span>(salas)</code></pre>
+    <div class="saidaLabel">Saída (testada ✓ — bate com o gabarito)</div>
+    <div class="out">Nome                 Sala
+Ana Souza            Gama
+Carlos Mendes        Delta
+Beatriz Lima         Beta
+Gabriel Costa        Gama
+Fernanda Lopes       Alfa
+Pedro Henrique       Beta
+Larissa Dias         Epsilon
+Bruno Almeida        Gama
+Camila Ribeiro       Alfa
+Felipe Souza         Kappa
+Isabela Duarte       Beta
+Eduardo Rocha        Alfa
+Bruna Castro         Delta
+Leonardo Cardoso     Epsilon
+Tatiane Souza        Zeta
+Anderson Nunes       Beta
+Carla Monteiro       Beta
+Vitor Fonseca        Lambda
+Renato Freitas       Gama
+
+SEMSALA.txt:
+Amanda Soares
+Vinicius Dias</div>
+  </details>
+
+  <details>
+    <summary>Revisão Q5 — temperaturas (fórmula par/ímpar) &nbsp;·&nbsp; <span style="color:var(--muted);font-weight:400">Laço + acumular, Receita 10</span></summary>
+    <div class="enun">Dia ímpar: <code>3(n+2)+5(n%5−3)</code>. Dia par: <code>2(n+5)+4(n%12−1)</code>. Exibir a temperatura de cada dia do intervalo (com "FRIO INTENSO" se &lt; 30) e retornar a média.</div>
+    <pre><code><span class="kw">def</span> <span class="fn">calculaTemperatura</span>(n):
+    <span class="kw">if</span> n % <span class="num">2</span> == <span class="num">1</span>:                  <span class="com"># ímpar</span>
+        <span class="kw">return</span> <span class="num">3</span> * (n + <span class="num">2</span>) + <span class="num">5</span> * (n % <span class="num">5</span> - <span class="num">3</span>)
+    <span class="kw">else</span>:                           <span class="com"># par</span>
+        <span class="kw">return</span> <span class="num">2</span> * (n + <span class="num">5</span>) + <span class="num">4</span> * (n % <span class="num">12</span> - <span class="num">1</span>)
+
+<span class="kw">def</span> <span class="fn">exibeECalculaMediaTemperaturas</span>(inicio, fim):
+    soma = <span class="num">0</span>
+    qtd = <span class="num">0</span>
+    <span class="kw">for</span> n <span class="kw">in</span> <span class="bi">range</span>(inicio, fim + <span class="num">1</span>):
+        t = <span class="fn">calculaTemperatura</span>(n)        <span class="com"># usa a outra função (obrigatório)</span>
+        <span class="bi">print</span>(<span class="str">'Dia %d: %d°F'</span> % (n, t))
+        <span class="kw">if</span> t &lt; <span class="num">30</span>:
+            <span class="bi">print</span>(<span class="str">'FRIO INTENSO'</span>)
+        soma = soma + t
+        qtd = qtd + <span class="num">1</span>
+    media = soma / qtd
+    <span class="bi">print</span>(<span class="str">'Média das temperaturas de %d a %d: %.2f°F'</span> % (inicio, fim, media))
+    <span class="kw">return</span> media
+
+<span class="com"># BP – dois testes</span>
+<span class="fn">exibeECalculaMediaTemperaturas</span>(<span class="num">5</span>, <span class="num">10</span>)
+<span class="fn">exibeECalculaMediaTemperaturas</span>(<span class="num">1</span>, <span class="num">4</span>)</code></pre>
+    <div class="saidaLabel">Saída (testada ✓ — bate com o gabarito)</div>
+    <div class="out">Dia 5: 6°F
+FRIO INTENSO
+Dia 6: 42°F
+Dia 7: 22°F
+FRIO INTENSO
+Dia 8: 54°F
+Dia 9: 38°F
+Dia 10: 66°F
+Média das temperaturas de 5 a 10: 38.00°F</div>
+  </details>
+
+  <details>
+    <summary>Bônus — Recursão: somaAlg e exibeVert &nbsp;·&nbsp; <span style="color:var(--muted);font-weight:400">Receita 9</span></summary>
+    <div class="enun">Recursão aparece nos slides — provável na P2. <code>somaAlg(323)=8</code> (soma dos algarismos). <code>exibeVert(875)</code> imprime 8, 7, 5 em linhas separadas.</div>
+    <pre><code><span class="kw">def</span> <span class="fn">somaAlg</span>(n):
+    <span class="kw">if</span> n &lt; <span class="num">10</span>:                    <span class="com"># caso base: 1 algarismo</span>
+        <span class="kw">return</span> n
+    <span class="kw">return</span> n % <span class="num">10</span> + <span class="fn">somaAlg</span>(n // <span class="num">10</span>)   <span class="com"># último + soma do resto</span>
+
+<span class="kw">def</span> <span class="fn">exibeVert</span>(n):
+    <span class="kw">if</span> n &lt; <span class="num">10</span>:
+        <span class="bi">print</span>(n)
+        <span class="kw">return</span>
+    <span class="fn">exibeVert</span>(n // <span class="num">10</span>)            <span class="com"># primeiro chama (imprime os de cima)</span>
+    <span class="bi">print</span>(n % <span class="num">10</span>)                  <span class="com"># depois imprime a unidade</span>
+
+<span class="bi">print</span>(<span class="fn">somaAlg</span>(<span class="num">323</span>))   <span class="com"># 8</span>
+<span class="fn">exibeVert</span>(<span class="num">875</span>)         <span class="com"># 8 / 7 / 5</span></code></pre>
+    <div class="saidaLabel">Saída (testada ✓)</div>
+    <div class="out">8
+8
+7
+5</div>
+  </details>
+</section>
+
+<!-- ===================== PEGADINHAS ===================== -->
+<section id="pegadinhas">
+  <h2 class="sec"><span class="dot"></span>Pegadinhas & Checklist final</h2>
+  <p class="lead">Os erros que mais derrubam nota — e o que conferir antes de entregar.</p>
+
+  <div class="card warn">
+    <h3>⚠️ Erros clássicos</h3>
+    <table>
+      <tr><th>Erro</th><th>Conserto</th></tr>
+      <tr><td>Esquecer <code>int()</code>/<code>float()</code> — comparar texto com número</td><td>Todo campo numérico do arquivo é <b>string</b>! Converta antes de calcular.</td></tr>
+      <tr><td>Esquecer <code>.strip()</code> — o <code>\n</code> gruda no último campo</td><td>Sempre <code>linha.strip()</code> antes do <code>split</code> (ou <code>int</code> falha).</td></tr>
+      <tr><td><code>write</code> não pula linha</td><td>Coloque <code>'\n'</code> você mesmo: <code>arq.write(nome+'\n')</code>.</td></tr>
+      <tr><td>Confundir separador (<code>,</code> vs <code>;</code>)</td><td>Olhe o arquivo: turmas usam <code>;</code>, os outros usam <code>,</code>.</td></tr>
+      <tr><td>Índice trocado em "número → posição"</td><td>Turma 1 fica na posição <b>0</b>: use <code>turma - 1</code>.</td></tr>
+      <tr><td>Recursão sem caso base → trava</td><td>Sempre um <code>if</code> que <code>return</code> sem chamar de novo.</td></tr>
+      <tr><td>Ignorar a ordem pedida</td><td>"ordenado" → <code>lista.sort()</code> antes de exibir.</td></tr>
+      <tr><td>Usar nome de função diferente do enunciado</td><td>A banca corrige pelo nome exato. Copie <code>decodifica</code>, <code>leArqSalas</code>, etc.</td></tr>
+      <tr><td>Ler o arquivo todo quando proíbem</td><td>Se diz "1 leitura / não ler de uma vez", use <code>for linha in arq</code> ou <code>readline</code>, nunca <code>read()</code>/<code>readlines()</code>.</td></tr>
+    </table>
+  </div>
+
+  <div class="card ok">
+    <h3>✅ Checklist antes de entregar</h3>
+    <table>
+      <tr><td>☐ Cada função tem o <b>nome exato</b> do enunciado?</td></tr>
+      <tr><td>☐ Onde pedem busca, ela é uma <b>função separada</b> que retorna índice ou <code>None</code>?</td></tr>
+      <tr><td>☐ Converti todos os números com <code>int</code>/<code>float</code>?</td></tr>
+      <tr><td>☐ Fiz <code>strip()</code> e usei o separador certo?</td></tr>
+      <tr><td>☐ Fechei todos os arquivos com <code>.close()</code>?</td></tr>
+      <tr><td>☐ Gravei em arquivo com <code>'\n'</code> em cada linha?</td></tr>
+      <tr><td>☐ Tem <b>BP</b> no fim chamando as funções?</td></tr>
+      <tr><td>☐ A saída tem o mesmo <b>formato</b> (espaços, ordem) do exemplo?</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>🧠 Mnemônico geral da P2</h3>
+    <span class="mantra" style="font-size:15px">LER (abre·for·strip·split·converte) → ORGANIZAR (busca·append) → CALCULAR (filtra·soma·média) → MOSTRAR/GRAVAR (sort·print·write) → FECHAR (close)</span>
+  </div>
+</section>
+
+<div class="foot">Feito sob medida para a sua P2 · Todas as resoluções foram executadas e conferidas com os arquivos de exemplo.</div>
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('nav.tabs button');
+  const secs = document.querySelectorAll('section');
+  tabs.forEach(b=>b.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    secs.forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById(b.dataset.t).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }));
+</script>
+</body>
+</html>
